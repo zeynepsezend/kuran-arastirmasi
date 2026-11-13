@@ -1,0 +1,5 @@
+node_modules/
+data/kuran.db*
+backups/
+*.zip
+.env

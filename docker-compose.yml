@@ -1,0 +1,40 @@
+# Kendi sunucunuzda (VPS) çalıştırmak için:
+#   1) Caddyfile içindeki alan adını kendi alan adınızla değiştirin
+#   2) docker compose up -d --build
+# Caddy, HTTPS sertifikasını (Let's Encrypt) otomatik alır ve yeniler.
+
+services:
+  app:
+    build: .
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      DB_FILE: /data/kuran.db
+      # Aşağıdakiler aynı klasördeki .env dosyasından okunur (.env.example'a bakın)
+      APP_URL: ${APP_URL:-}
+      SMTP_HOST: ${SMTP_HOST:-}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_SECURE: ${SMTP_SECURE:-0}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASS: ${SMTP_PASS:-}
+      MAIL_FROM: ${MAIL_FROM:-}
+    volumes:
+      - kuran-data:/data
+
+  caddy:
+    image: caddy:2
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    depends_on:
+      - app
+
+volumes:
+  kuran-data:
+  caddy-data:
+  caddy-config:

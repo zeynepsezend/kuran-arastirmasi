@@ -1,0 +1,6 @@
+# "ornek-alanadi.com" yerine kendi alan adınızı yazın.
+# Alan adının DNS kaydı (A kaydı) sunucunuzun IP adresini göstermelidir.
+ornek-alanadi.com {
+	encode gzip
+	reverse_proxy app:3000
+}
